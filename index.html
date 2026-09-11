@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="rtvP8u9hMKqgZLcQBAA0YXm9XUlHKOY5TSFMEd8hz7Y" />
+<title>Lumenix Intelligence — AI Systems for Dealers & Auto Shops</title>
+<meta name="description" content="AI systems that capture leads, follow up instantly, and automate paperwork — built for dealers and auto shops in South Florida.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04060F;
+    --card: #0A0E1A;
+    --card-border: rgba(0,180,255,0.10);
+    --card-border-hover: rgba(0,180,255,0.35);
+    --text: #E8F4FF;
+    --text2: #C4D9EE;
+    --text3: #9FBBD9;
+    --accent: #00B4FF;
+    --accent-dim: #0077AA;
+    --green: #00E0A0;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'DM Sans', sans-serif; overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.01em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* NAV */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 48px; background: rgba(4,6,15,0.85);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; display: flex; align-items: center; gap: 10px; }
+  .nav-logo .mark { color: var(--accent); }
+  .nav-links { display: flex; gap: 36px; align-items: center; }
+  .nav-links a { font-size: 14px; color: var(--text2); transition: color 0.2s ease; }
+  .nav-links a:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .lang-toggle {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text2);
+    border: 1px solid var(--card-border); border-radius: 6px; padding: 7px 12px;
+    cursor: pointer; transition: all 0.2s ease; background: transparent;
+  }
+  .lang-toggle:hover { border-color: var(--accent); color: var(--text); }
+  .nav-cta { background: var(--accent); color: #04060F; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 700; }
+  @media (max-width: 860px) { .nav-links { display: none; } .nav { padding: 18px 24px; } }
+
+  /* HERO — company level, not product level */
+  .hero {
+    min-height: 92vh; display: flex; align-items: center;
+    padding: 130px 48px 60px;
+  }
+  .hero-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent);
+    letter-spacing: 2.5px; margin-bottom: 22px;
+  }
+
+  .hero-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(38px, 6vw, 68px);
+    line-height: 1.04; letter-spacing: 0.005em; margin-bottom: 24px;
+  }
+  .hero-headline .accent { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 18px; color: var(--text2); max-width: 620px; margin: 0 auto 40px;
+    line-height: 1.6;
+  }
+
+  .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
+
+  .btn-primary {
+    background: var(--accent); color: #04060F; padding: 16px 30px; border-radius: 8px;
+    font-weight: 700; font-size: 15px; border: none; cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,180,255,0.25); }
+  .btn-secondary {
+    background: transparent; color: var(--text); padding: 16px 30px; border-radius: 8px;
+    font-weight: 600; font-size: 15px; border: 1px solid var(--card-border); cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .btn-secondary:hover { border-color: var(--card-border-hover); }
+
+  /* Trust row — who this is for, quick visual proof of category */
+  .trust-row {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+    padding-top: 32px; border-top: 1px solid var(--card-border);
+  }
+  .trust-item { display: flex; align-items: center; gap: 10px; }
+  .trust-icon {
+    width: 34px; height: 34px; border-radius: 8px; background: var(--card);
+    border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .trust-text { font-size: 13.5px; color: var(--text2); text-align: left; }
+  .trust-text strong { color: var(--text); display: block; font-size: 14px; }
+
+  @media (max-width: 700px) {
+    .hero { padding: 110px 24px 40px; }
+    .trust-row { gap: 20px; }
+  }
+
+  /* PROBLEM STRIP — the shared pain across all niches */
+  .problem-strip {
+    padding: 70px 48px;
+    border-top: 1px solid var(--card-border);
+    border-bottom: 1px solid var(--card-border);
+    background: var(--card);
+  }
+  .problem-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px;
+  }
+  .problem-card { text-align: left; }
+  .problem-stat {
+    font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: var(--accent);
+    line-height: 1; margin-bottom: 10px;
+  }
+  .problem-label { font-size: 14px; color: var(--text2); line-height: 1.5; }
+
+  @media (max-width: 780px) {
+    .problem-inner { grid-template-columns: 1fr; gap: 28px; }
+    .problem-strip { padding: 50px 24px; }
+  }
+
+  /* DOORS SECTION */
+  .doors-section { padding: 90px 48px 100px; }
+  .doors-intro { max-width: 700px; margin: 0 auto 44px; text-align: center; }
+  .doors-intro h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.5vw, 40px); letter-spacing: 0.01em; margin-bottom: 12px; }
+  .doors-intro p { color: var(--text2); font-size: 15px; }
+
+  .doors-grid { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .door-card {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 14px;
+    padding: 26px 22px; display: flex; flex-direction: column;
+    transition: border-color 0.2s ease, transform 0.2s ease; cursor: pointer; min-height: 320px;
+  }
+  .door-card:hover { border-color: var(--card-border-hover); transform: translateY(-3px); }
+
+  .door-thumb {
+    height: 100px; border-radius: 10px; background: #0D1220; border: 1px solid var(--card-border);
+    margin-bottom: 18px; position: relative; overflow: hidden;
+  }
+
+  .door-name { font-family: 'Bebas Neue', sans-serif; font-size: 23px; letter-spacing: 0.01em; margin-bottom: 8px; }
+  .door-line { font-size: 13px; color: var(--text2); line-height: 1.5; flex: 1; }
+  .door-arrow { margin-top: 16px; font-size: 12.5px; color: var(--accent); font-weight: 600; }
+
+  /* ---- Realistic mini-visuals for each door thumbnail ---- */
+
+  /* Web + Growth thumb: mini browser + chat bubble combined */
+  .wg-thumb { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 14px; }
+  .wg-mini-browser { width: 70%; background: rgba(0,180,255,0.06); border: 1px solid var(--card-border); border-radius: 6px; padding: 8px; }
+  .wg-line { height: 4px; background: var(--text3); opacity: 0.4; border-radius: 2px; margin-bottom: 4px; }
+  .wg-line.short { width: 50%; }
+  .wg-bubble {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim)); color: #04060F;
+    font-size: 10px; font-weight: 700; padding: 6px 10px; border-radius: 8px 8px 8px 3px;
+    animation: wgFade 2.2s ease-in-out infinite;
+  }
+  @keyframes wgFade { 0%,100% { opacity: 0.35; transform: translateY(2px); } 50% { opacity: 1; transform: translateY(0); } }
+
+  /* DealFlow thumb: mini license scan */
+  .df-card {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 78%; height: 62px; background: linear-gradient(135deg,#eef3f8,#dde6f0); border-radius: 6px; overflow: hidden;
+  }
+  .df-header { height: 10px; background: linear-gradient(90deg,#1a3a5c,#0d2440); }
+  .df-body { display: flex; padding: 6px; gap: 6px; }
+  .df-photo { width: 18px; height: 22px; background: #a3b5c7; border-radius: 2px; flex-shrink: 0; }
+  .df-lines div { height: 3px; background: #1a2b3d; opacity: 0.3; border-radius: 1px; margin-bottom: 3px; }
+  .df-lines .w1 { width: 36px; } .df-lines .w2 { width: 28px; } .df-lines .w3 { width: 40px; }
+  .df-scan {
+    position: absolute; left: 0; right: 0; height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 10px 2px rgba(0,180,255,0.6); animation: dfScanMove 1.8s ease-in-out infinite;
+  }
+  @keyframes dfScanMove { 0% { top: 12px; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } 100% { top: 60px; opacity: 0; } }
+
+  /* Talleres thumb: wrench + missed call to text */
+  .tl-thumb { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .tl-icon-box {
+    width: 34px; height: 34px; border-radius: 8px; background: rgba(0,180,255,0.08);
+    border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; font-size: 15px;
+  }
+  .tl-arrow { color: var(--accent); font-size: 14px; animation: tlPulse 1.6s ease-in-out infinite; }
+  @keyframes tlPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  @media (max-width: 980px) { .doors-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .doors-section { padding: 50px 20px 70px; } }
+
+  /* FOOTER */
+  .footer { border-top: 1px solid var(--card-border); padding: 40px 48px; }
+  .footer-inner { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .footer-left { font-size: 13px; color: var(--text3); }
+  .footer-right { font-size: 13px; color: var(--text3); display: flex; gap: 20px; }
+  .footer-right a { color: var(--text2); }
+  .footer-right a:hover { color: var(--accent); }
+  @media (max-width: 600px) { .footer-inner { flex-direction: column; align-items: flex-start; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo"><span class="mark">LMX</span> INTELLIGENCE</div>
+  <div class="nav-links">
+    <a href="/web-growth" data-i18n="navWebGrowth">Web + Growth</a>
+    <a href="/dealflow" data-i18n="navDealFlow">DealFlow</a>
+    <a href="/talleres" data-i18n="navTalleres">Talleres</a>
+  </div>
+  <div class="nav-right">
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">ES</button>
+    <a href="#doors" class="nav-cta" data-i18n="navCta">Ver Servicios</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow" data-i18n="heroEyebrow">// AI SYSTEMS FOR SOUTH FLORIDA BUSINESSES</div>
+    <h1 class="hero-headline" data-i18n-html="heroHeadline">When a lead shows up, <span class="accent">someone answers.</span></h1>
+    <p class="hero-sub" data-i18n="heroSub">Lumenix Intelligence builds AI systems that capture leads, respond in seconds, and automate the paperwork — for dealers and auto shops that can't afford to lose a customer to a slow reply.</p>
+    <div class="hero-ctas">
+      <a href="#doors" class="btn-primary" data-i18n="heroCtaPrimary">See the systems</a>
+      <a href="#problem" class="btn-secondary" data-i18n="heroCtaSecondary">Why this matters</a>
+    </div>
+
+    <div class="trust-row">
+      <div class="trust-item">
+        <div class="trust-icon">🚗</div>
+        <div class="trust-text"><strong data-i18n="trust1Title">Independent Dealers</strong><span data-i18n="trust1Sub">Buy, sell, or both</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">🔧</div>
+        <div class="trust-text"><strong data-i18n="trust2Title">Auto Shops</strong><span data-i18n="trust2Sub">Repair, body, performance</span></div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-icon">📍</div>
+        <div class="trust-text"><strong data-i18n="trust3Title">South Florida</strong><span data-i18n="trust3Sub">Built in the field, not a lab</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="problem-strip" id="problem">
+  <div class="problem-inner">
+    <div class="problem-card">
+      <div class="problem-stat">67%</div>
+      <div class="problem-label" data-i18n="problem1">of buyers choose the business that responds first — not the best price.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-stat">&lt;90s</div>
+      <div class="problem-label" data-i18n="problem2">is how fast a lead needs a reply before they call the next name on the list.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-stat">0</div>
+      <div class="problem-label" data-i18n="problem3">manual data entry once a system replaces the paperwork and the missed calls.</div>
+    </div>
+  </div>
+</section>
+
+<section class="doors-section" id="doors">
+  <div class="doors-intro">
+    <h2 class="display" data-i18n="doorsTitle">Four systems. One job: nothing slips through.</h2>
+    <p data-i18n="doorsSub">Pick the one that solves what's costing you deals today.</p>
+  </div>
+
+  <div class="doors-grid">
+    <a href="/web-growth" class="door-card">
+      <div class="door-thumb">
+        <div class="wg-thumb">
+          <div class="wg-mini-browser"><div class="wg-line"></div><div class="wg-line short"></div></div>
+          <div class="wg-bubble">New lead ✓</div>
+        </div>
+      </div>
+      <div class="door-name display" data-i18n="door1Name">Web + Growth</div>
+      <p class="door-line" data-i18n="door1Line">Tu página, un agente que conversa, y reseñas que se piden solas.</p>
+      <div class="door-arrow" data-i18n="doorArrow">See how it works →</div>
+    </a>
+
+    <a href="/dealflow" class="door-card">
+      <div class="door-thumb">
+        <div class="df-card">
+          <div class="df-header"></div>
+          <div class="df-body">
+            <div class="df-photo"></div>
+            <div class="df-lines"><div class="w1"></div><div class="w2"></div><div class="w3"></div></div>
+          </div>
+          <div class="df-scan"></div>
+        </div>
+      </div>
+      <div class="door-name display">DealFlow</div>
+      <p class="door-line" data-i18n="door3Line">Florida paperwork, ready in under 2 minutes. For vehicle buyers.</p>
+      <div class="door-arrow" data-i18n="doorArrow">See how it works →</div>
+    </a>
+
+    <a href="/talleres" class="door-card">
+      <div class="door-thumb">
+        <div class="tl-thumb">
+          <div class="tl-icon-box">🔧</div>
+          <div class="tl-arrow">→</div>
+          <div class="tl-icon-box">💬</div>
+        </div>
+      </div>
+      <div class="door-name display" data-i18n="door4Name">Auto Shops</div>
+      <p class="door-line" data-i18n="door4Line">Your shop's site is down, or doesn't exist. The call comes in, no one answers, they leave.</p>
+      <div class="door-arrow" data-i18n="doorArrow">See how it works →</div>
+    </a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left" data-i18n="footerLeft">Lumenix Intelligence · South Florida · Juan Martinez, Founder</div>
+    <div class="footer-right">
+      <a href="tel:+17546104417">(754) 610-4417</a>
+      <a href="mailto:juan@lumenixintelligence.com">juan@lumenixintelligence.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  en: {
+    navLeadEngine: "Lead Engine", navDigitalGrowth: "Digital Growth", navDealFlow: "DealFlow", navTalleres: "Auto Shops",
+    navCta: "See Services",
+    heroEyebrow: "// AI SYSTEMS FOR SOUTH FLORIDA BUSINESSES",
+    heroHeadline: 'When a lead shows up, <span class="accent">someone answers.</span>',
+    heroSub: "Lumenix Intelligence builds AI systems that capture leads, respond in seconds, and automate the paperwork — for dealers and auto shops that can't afford to lose a customer to a slow reply.",
+    heroCtaPrimary: "See the systems", heroCtaSecondary: "Why this matters",
+    trust1Title: "Independent Dealers", trust1Sub: "Buy, sell, or both",
+    trust2Title: "Auto Shops", trust2Sub: "Repair, body, performance",
+    trust3Title: "South Florida", trust3Sub: "Built in the field, not a lab",
+    problem1: "of buyers choose the business that responds first — not the best price.",
+    problem2: "is how fast a lead needs a reply before they call the next name on the list.",
+    problem3: "manual data entry once a system replaces the paperwork and the missed calls.",
+    doorsTitle: "Three systems. One job: nothing slips through.",
+    doorsSub: "Pick the one that solves what's costing you deals today.",
+    door1Name: "Web + Growth",
+    door1Line: "Your page, an agent that talks, and reviews that ask for themselves.",
+    door3Line: "Florida paperwork, ready in under 2 minutes. For vehicle buyers.",
+    door4Name: "Auto Shops",
+    door4Line: "Your shop's site is down, or doesn't exist. The call comes in, no one answers, they leave.",
+    doorArrow: "See how it works →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  },
+  es: {
+    navWebGrowth: "Web + Growth", navDealFlow: "DealFlow", navTalleres: "Talleres",
+    navCta: "Ver Servicios",
+    heroEyebrow: "// SISTEMAS DE IA PARA NEGOCIOS EN SOUTH FLORIDA",
+    heroHeadline: 'Cuando llega un lead, <span class="accent">alguien responde.</span>',
+    heroSub: "Lumenix Intelligence construye sistemas de IA que capturan leads, responden en segundos, y automatizan el papeleo — para dealers y talleres que no pueden darse el lujo de perder un cliente por responder tarde.",
+    heroCtaPrimary: "Ver los sistemas", heroCtaSecondary: "Por qué importa",
+    trust1Title: "Dealers Independientes", trust1Sub: "Compran, venden, o ambos",
+    trust2Title: "Talleres", trust2Sub: "Mecánica, hojalatería, performance",
+    trust3Title: "South Florida", trust3Sub: "Construido en campo, no en un laboratorio",
+    problem1: "de los compradores elige al negocio que responde primero — no al de mejor precio.",
+    problem2: "es lo rápido que necesita respuesta un lead antes de llamar al siguiente en la lista.",
+    problem3: "de entrada manual de datos una vez que el sistema reemplaza el papeleo y las llamadas perdidas.",
+    doorsTitle: "Tres sistemas. Un mismo trabajo: que nada se pierda.",
+    doorsSub: "Elige el que resuelve lo que te está costando ventas hoy.",
+    door1Name: "Web + Growth",
+    door1Line: "Tu página, un agente que conversa, y reseñas que se piden solas.",
+    door3Line: "El papeleo de Florida, listo en menos de 2 minutos. Para compradores de vehículos.",
+    door4Name: "Talleres",
+    door4Line: "Tu taller no tiene página, o la tiene muerta. El lead llama, nadie responde, se va.",
+    doorArrow: "Ver cómo funciona →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  }
+};
+
+let currentLang = 'es';
+
+function applyLang(lang) {
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[key]) el.innerHTML = t[key];
+  });
+  document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
+  document.documentElement.lang = lang;
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  applyLang(currentLang);
+}
+
+applyLang(currentLang);
+</script>
+
+</body>
+</html>

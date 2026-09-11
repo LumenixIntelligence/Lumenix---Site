@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web + Growth — Lumenix Intelligence</title>
+<meta name="description" content="Tu página web, con un agente de IA que responde, hace seguimiento, y pide reseñas — todo automático.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04060F; --card: #0A0E1A; --card-border: rgba(0,180,255,0.10);
+    --card-border-hover: rgba(0,180,255,0.35); --text: #E8F4FF; --text2: #C4D9EE;
+    --text3: #9FBBD9; --accent: #00B4FF; --accent-dim: #0077AA; --green: #00E0A0; --red: #FF5C5C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+  .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.01em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 48px; background: rgba(4,6,15,0.85);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; }
+  .nav-logo .mark { color: var(--accent); }
+  .nav-back { font-size: 13px; color: var(--text2); }
+  .nav-back:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .lang-toggle {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text2);
+    border: 1px solid var(--card-border); border-radius: 6px; padding: 7px 12px;
+    cursor: pointer; background: transparent; transition: all 0.2s ease;
+  }
+  .lang-toggle:hover { border-color: var(--accent); color: var(--text); }
+  .nav-cta { background: var(--accent); color: #04060F; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 700; }
+  @media (max-width: 700px) { .nav { padding: 18px 20px; } }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
+  @media (max-width: 700px) { .wrap { padding: 0 20px; } }
+
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); letter-spacing: 2px; margin-bottom: 14px; }
+
+  .sec-a { padding: 150px 0 70px; }
+  .sec-a-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; align-items: start; }
+  .sec-a h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(34px, 4.2vw, 52px); line-height: 1.05; margin-bottom: 18px; }
+  .sec-a h1 .accent { color: var(--accent); }
+  .sec-a p { color: var(--text2); font-size: 16px; line-height: 1.6; max-width: 460px; margin-bottom: 14px; }
+  .sec-a .who { font-size: 13.5px; color: var(--text3); }
+
+  /* Combined demo: mini landing page + long chat conversation */
+  .combo-demo {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+
+  .mini-browser {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; overflow: hidden;
+  }
+  .mini-browser-bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; background: #06080F; border-bottom: 1px solid var(--card-border); }
+  .mini-browser-dot { width: 7px; height: 7px; border-radius: 50%; background: #2A3350; }
+  .mini-browser-url { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text3); margin-left: 8px; background: #0D1220; padding: 3px 8px; border-radius: 4px; flex: 1; }
+  .mini-browser-content { padding: 16px 18px; }
+  .mb-headline { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .mb-headline .a { color: var(--accent); }
+  .mb-sub { font-size: 10.5px; color: var(--text2); margin-bottom: 10px; }
+  .mb-form { display: flex; gap: 6px; }
+  .mb-input { flex: 1; height: 24px; background: #171E30; border-radius: 5px; }
+  .mb-button { width: 70px; height: 24px; background: var(--accent); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; color: #04060F; }
+
+  .chat-box {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px;
+  }
+  .chat-box-header { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--card-border); margin-bottom: 12px; }
+  .cb-avatar { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-dim)); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #04060F; }
+  .cb-title { font-size: 12px; font-weight: 600; }
+  .cb-sub { font-size: 9.5px; color: var(--green); }
+  .chat-scroll { max-height: 260px; overflow: hidden; display: flex; flex-direction: column; gap: 7px; }
+  .c-msg { max-width: 78%; padding: 7px 11px; border-radius: 11px; font-size: 11.5px; line-height: 1.35; opacity: 0; transform: translateY(6px); transition: all 0.35s ease; }
+  .c-msg.show { opacity: 1; transform: translateY(0); }
+  .c-msg.in { align-self: flex-start; background: #171E30; }
+  .c-msg.out { align-self: flex-end; background: linear-gradient(135deg, var(--accent), var(--accent-dim)); color: #04060F; font-weight: 500; }
+  .c-typing { align-self: flex-start; display: flex; gap: 3px; padding: 8px 11px; background: #171E30; border-radius: 11px; opacity: 0; transition: opacity 0.25s ease; }
+  .c-typing.show { opacity: 1; }
+  .c-typing div { width: 5px; height: 5px; background: var(--text2); border-radius: 50%; animation: cTypingB 1.1s infinite ease-in-out; }
+  .c-typing div:nth-child(2) { animation-delay: 0.15s; }
+  .c-typing div:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes cTypingB { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-3px); opacity: 1; } }
+
+  @media (max-width: 860px) {
+    .sec-a-grid { grid-template-columns: 1fr; }
+    .sec-a { padding: 120px 0 50px; }
+    .combo-demo { max-width: 100%; }
+  }
+
+  .sec-b { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-b h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 36px; }
+  .beats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .beat {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 10px;
+    padding: 16px 14px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  .beat.active { border-color: var(--accent); background: rgba(0,180,255,0.04); }
+  .beat-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); }
+  .beat.active .beat-num { color: var(--accent); }
+  .beat-icon { font-size: 20px; margin: 8px 0; }
+  .beat-text { font-size: 12.5px; color: var(--text2); line-height: 1.35; }
+  .beat.active .beat-text { color: var(--text); }
+  @media (max-width: 860px) { .beats { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .beats { grid-template-columns: repeat(2, 1fr); } }
+
+  .sec-c { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-c h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 36px; }
+  .install-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .install-num { font-family: 'JetBrains Mono', monospace; font-size: 26px; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
+  .install-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .install-desc { font-size: 13.5px; color: var(--text2); line-height: 1.5; }
+  @media (max-width: 860px) { .install-steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .install-steps { grid-template-columns: 1fr; } }
+
+  .sec-d { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-d h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 28px; }
+  .stop-list { display: flex; flex-direction: column; gap: 4px; }
+  .stop-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .stop-item:last-child { border-bottom: none; }
+  .stop-icon { color: var(--red); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .stop-text { font-size: 15px; color: var(--text); }
+
+  .sec-e { padding: 70px 0 100px; border-top: 1px solid var(--card-border); }
+  .cta-card {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 16px;
+    padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+  }
+  .cta-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 12px; }
+  .cta-card p { color: var(--text2); font-size: 15px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); letter-spacing: 1px; margin-bottom: 6px; }
+  .form-group input {
+    width: 100%; background: #0D1220; border: 1px solid var(--card-border); border-radius: 8px;
+    padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
+  }
+  .form-group input:focus { outline: none; border-color: var(--accent); }
+  .form-submit {
+    width: 100%; background: var(--accent); color: #04060F; border: none; padding: 14px;
+    border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 6px;
+  }
+  @media (max-width: 860px) { .cta-card { grid-template-columns: 1fr; padding: 32px 24px; } }
+
+  .footer { border-top: 1px solid var(--card-border); padding: 32px 0; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text3); }
+  .footer-inner a { color: var(--text2); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><span class="mark">LMX</span> INTELLIGENCE</a>
+  <a href="/" class="nav-back" data-i18n="navBack">← Todos los servicios</a>
+  <div class="nav-right">
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+    <a href="#cta" class="nav-cta" data-i18n="navCta">Lo quiero</a>
+  </div>
+</nav>
+
+<section class="sec-a">
+  <div class="wrap sec-a-grid">
+    <div>
+      <div class="eyebrow" data-i18n="eyebrow">// TU PÁGINA WEB, CON UN AGENTE QUE TRABAJA SOLO</div>
+      <h1 data-i18n-html="h1">Una página que <span class="accent">responde, conversa, y pide la reseña.</span></h1>
+      <p data-i18n="p1">Tu landing page profesional, conectada a un agente de IA que contesta cada mensaje, resuelve dudas, agenda, y — cuando el trabajo termina — pide la reseña solo.</p>
+      <p class="who" data-i18n="who">Todo en un solo sistema: la página, la conversación, y el seguimiento. No son tres cosas separadas.</p>
+    </div>
+
+    <div class="combo-demo">
+      <div class="mini-browser">
+        <div class="mini-browser-bar">
+          <div class="mini-browser-dot"></div><div class="mini-browser-dot"></div><div class="mini-browser-dot"></div>
+          <div class="mini-browser-url">tudealer.com</div>
+        </div>
+        <div class="mini-browser-content">
+          <div class="mb-headline" data-i18n-html="mbHeadline">Vende tu carro. <span class="a">Recibe tu oferta hoy.</span></div>
+          <div class="mb-sub" data-i18n="mbSub">Respuesta en menos de 2 minutos.</div>
+          <div class="mb-form">
+            <div class="mb-input"></div>
+            <div class="mb-button" data-i18n="mbButton">ENVIAR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-box">
+        <div class="chat-box-header">
+          <div class="cb-avatar">AI</div>
+          <div>
+            <div class="cb-title" data-i18n="cbTitle">Lumenix Assistant</div>
+            <div class="cb-sub" data-i18n="cbSub">● Activo ahora</div>
+          </div>
+        </div>
+        <div class="chat-scroll" id="chatScroll"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-b">
+  <div class="wrap">
+    <h2 data-i18n="secBTitle">Así se ve funcionando</h2>
+    <div class="beats" id="beats">
+      <div class="beat" data-i="0"><div class="beat-num">01</div><div class="beat-icon">🌐</div><div class="beat-text" data-i18n="beat1">Cliente llega a tu página</div></div>
+      <div class="beat" data-i="1"><div class="beat-num">02</div><div class="beat-icon">📝</div><div class="beat-text" data-i18n="beat2">Escribe o llena el formulario</div></div>
+      <div class="beat" data-i="2"><div class="beat-num">03</div><div class="beat-icon">💬</div><div class="beat-text" data-i18n="beat3">El agente conversa y resuelve dudas</div></div>
+      <div class="beat" data-i="3"><div class="beat-num">04</div><div class="beat-icon">📅</div><div class="beat-text" data-i18n="beat4">Agenda o cierra el trato</div></div>
+      <div class="beat" data-i="4"><div class="beat-num">05</div><div class="beat-icon">⭐</div><div class="beat-text" data-i18n="beat5">Al terminar, pide la reseña sola</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-c">
+  <div class="wrap">
+    <h2 data-i18n="secCTitle">Cómo se instala</h2>
+    <div class="install-steps">
+      <div><div class="install-num">01</div><div class="install-title" data-i18n="i1t">Lo que necesitamos</div><div class="install-desc" data-i18n="i1d">Tu marca, servicios, y cómo respondes hoy a tus clientes.</div></div>
+      <div><div class="install-num">02</div><div class="install-title" data-i18n="i2t">Lo que construimos</div><div class="install-desc" data-i18n="i2d">Tu página completa, con el agente conectado y listo para conversar.</div></div>
+      <div><div class="install-num">03</div><div class="install-title" data-i18n="i3t">Cómo entra al día a día</div><div class="install-desc" data-i18n="i3d">Corre solo. Tú solo revisas cuando el agente te avisa que hay algo que decidir.</div></div>
+      <div><div class="install-num">04</div><div class="install-title" data-i18n="i4t">Cuándo queda vivo</div><div class="install-desc" data-i18n="i4d">Una semana, ajustado a como hablas con tus clientes.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-d">
+  <div class="wrap">
+    <h2 data-i18n="secDTitle">Lo que dejas de hacer</h2>
+    <div class="stop-list">
+      <div class="stop-item"><span class="stop-icon">✕</span><span class="stop-text" data-i18n="stop1">Tener página web y sistema de mensajes por separado</span></div>
+      <div class="stop-item"><span class="stop-icon">✕</span><span class="stop-text" data-i18n="stop2">Responder las mismas preguntas una y otra vez</span></div>
+      <div class="stop-item"><span class="stop-icon">✕</span><span class="stop-text" data-i18n="stop3">Pedir reseñas de memoria, cuando te acuerdas</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-e" id="cta">
+  <div class="wrap">
+    <div class="cta-card">
+      <div>
+        <h2 data-i18n="ctaTitle">Una página. Un agente. Cero seguimiento manual.</h2>
+        <p data-i18n="ctaSub">Tu web, tu conversación, y tus reseñas, corriendo solas mientras trabajas.</p>
+      </div>
+      <form id="leForm">
+        <div class="form-group"><label data-i18n="fName">TU NOMBRE</label><input type="text" placeholder="Juan Pérez" required></div>
+        <div class="form-group"><label data-i18n="fBiz">NOMBRE DEL NEGOCIO</label><input type="text" placeholder="South Florida Motors" required></div>
+        <div class="form-group"><label data-i18n="fPhone">TELÉFONO</label><input type="tel" placeholder="+1 (754) 000-0000" required></div>
+        <button type="submit" class="form-submit" data-i18n="fSubmit">Lo quiero →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div data-i18n="footerLeft">Lumenix Intelligence · South Florida · Juan Martinez, Founder</div>
+    <div><a href="tel:+17546104417">(754) 610-4417</a> &nbsp;&nbsp; <a href="mailto:juan@lumenixintelligence.com">juan@lumenixintelligence.com</a></div>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  es: {
+    navBack: "← Todos los servicios", navCta: "Lo quiero",
+    eyebrow: "// TU PÁGINA WEB, CON UN AGENTE QUE TRABAJA SOLO",
+    h1: 'Una página que <span class="accent">responde, conversa, y pide la reseña.</span>',
+    p1: "Tu landing page profesional, conectada a un agente de IA que contesta cada mensaje, resuelve dudas, agenda, y — cuando el trabajo termina — pide la reseña solo.",
+    who: "Todo en un solo sistema: la página, la conversación, y el seguimiento. No son tres cosas separadas.",
+    mbHeadline: 'Vende tu carro. <span class="a">Recibe tu oferta hoy.</span>',
+    mbSub: "Respuesta en menos de 2 minutos.", mbButton: "ENVIAR",
+    cbTitle: "Lumenix Assistant", cbSub: "● Activo ahora",
+    secBTitle: "Así se ve funcionando",
+    beat1: "Cliente llega a tu página", beat2: "Escribe o llena el formulario", beat3: "El agente conversa y resuelve dudas",
+    beat4: "Agenda o cierra el trato", beat5: "Al terminar, pide la reseña sola",
+    secCTitle: "Cómo se instala",
+    i1t: "Lo que necesitamos", i1d: "Tu marca, servicios, y cómo respondes hoy a tus clientes.",
+    i2t: "Lo que construimos", i2d: "Tu página completa, con el agente conectado y listo para conversar.",
+    i3t: "Cómo entra al día a día", i3d: "Corre solo. Tú solo revisas cuando el agente te avisa que hay algo que decidir.",
+    i4t: "Cuándo queda vivo", i4d: "Una semana, ajustado a como hablas con tus clientes.",
+    secDTitle: "Lo que dejas de hacer",
+    stop1: "Tener página web y sistema de mensajes por separado",
+    stop2: "Responder las mismas preguntas una y otra vez",
+    stop3: "Pedir reseñas de memoria, cuando te acuerdas",
+    ctaTitle: "Una página. Un agente. Cero seguimiento manual.",
+    ctaSub: "Tu web, tu conversación, y tus reseñas, corriendo solas mientras trabajas.",
+    fName: "TU NOMBRE", fBiz: "NOMBRE DEL NEGOCIO", fPhone: "TELÉFONO", fSubmit: "Lo quiero →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  },
+  en: {
+    navBack: "← All services", navCta: "I want this",
+    eyebrow: "// YOUR WEBSITE, WITH AN AGENT THAT WORKS ON ITS OWN",
+    h1: "A page that <span class=\"accent\">replies, talks, and asks for the review.</span>",
+    p1: "Your professional landing page, connected to an AI agent that answers every message, handles questions, books appointments, and — once the job is done — asks for the review on its own.",
+    who: "All one system: the page, the conversation, and the follow-up. Not three separate things.",
+    mbHeadline: 'Sell your car. <span class="a">Get your offer today.</span>',
+    mbSub: "Reply in under 2 minutes.", mbButton: "SUBMIT",
+    cbTitle: "Lumenix Assistant", cbSub: "● Active now",
+    secBTitle: "Here's what it looks like",
+    beat1: "Customer lands on your page", beat2: "Types or fills out the form", beat3: "Agent chats and answers questions",
+    beat4: "Books or closes the deal", beat5: "Once done, asks for the review on its own",
+    secCTitle: "How it gets installed",
+    i1t: "What we need", i1d: "Your brand, services, and how you reply to customers today.",
+    i2t: "What we build", i2d: "Your full page, with the agent connected and ready to chat.",
+    i3t: "How it enters your day-to-day", i3d: "It runs on its own. You only check in when the agent flags something to decide.",
+    i4t: "When it goes live", i4d: "One week, tuned to how you actually talk to customers.",
+    secDTitle: "What you stop doing",
+    stop1: "Running your website and your messaging separately",
+    stop2: "Answering the same questions over and over",
+    stop3: "Asking for reviews from memory, when you remember",
+    ctaTitle: "One page. One agent. Zero manual follow-up.",
+    ctaSub: "Your site, your conversation, and your reviews, running on their own while you work.",
+    fName: "YOUR NAME", fBiz: "BUSINESS NAME", fPhone: "PHONE", fSubmit: "I want this →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  }
+};
+
+let currentLang = 'es';
+
+function applyLang(lang) {
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[key]) el.innerHTML = t[key];
+  });
+  document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
+  document.documentElement.lang = lang;
+  runPhoneDemo();
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  applyLang(currentLang);
+}
+
+let beatIndex = 0;
+const beats = document.querySelectorAll('.beat');
+function cycleBeats() {
+  beats.forEach(b => b.classList.remove('active'));
+  beats[beatIndex].classList.add('active');
+  beatIndex = (beatIndex + 1) % beats.length;
+}
+cycleBeats();
+setInterval(cycleBeats, 1300);
+
+const chatScript = {
+  es: [
+    { type: 'in', text: "Hola, vi el anuncio de mi Honda Accord 2019, ¿siguen comprando?" },
+    { type: 'typing' },
+    { type: 'out', text: "¡Sí! Con gusto te ayudo. ¿Me confirmas el año, marca y modelo exacto?" },
+    { type: 'in', text: "2019 Honda Accord LX, automático" },
+    { type: 'typing' },
+    { type: 'out', text: "Perfecto. ¿Tiene algún golpe o problema mecánico que deba saber?" },
+    { type: 'in', text: "No, está en buen estado, solo un rayón chiquito en la puerta" },
+    { type: 'typing' },
+    { type: 'out', text: "Entendido. Con esa info tu oferta preliminar es $14,200. ¿Quieres agendar para verlo hoy o mañana?" },
+    { type: 'in', text: "Mañana en la tarde me queda mejor" },
+    { type: 'gap' },
+    { type: 'in', text: "Ya dejé el carro, todo salió bien, gracias!" },
+    { type: 'typing' },
+    { type: 'out', text: "¡Qué bueno! Fue un gusto ayudarte. ¿Nos regalas una reseña rápida en Google? Nos ayuda muchísimo." },
+  ],
+  en: [
+    { type: 'in', text: "Hi, I saw the listing for my 2019 Honda Accord, are you still buying?" },
+    { type: 'typing' },
+    { type: 'out', text: "Yes! Happy to help. Can you confirm the exact year, make and model?" },
+    { type: 'in', text: "2019 Honda Accord LX, automatic" },
+    { type: 'typing' },
+    { type: 'out', text: "Got it. Any damage or mechanical issues I should know about?" },
+    { type: 'in', text: "No, it's in good shape, just a small scratch on the door" },
+    { type: 'typing' },
+    { type: 'out', text: "Understood. Based on that, your preliminary offer is $14,200. Want to schedule for today or tomorrow?" },
+    { type: 'in', text: "Tomorrow afternoon works better for me" },
+    { type: 'gap' },
+    { type: 'in', text: "Just dropped off the car, everything went smoothly, thanks!" },
+    { type: 'typing' },
+    { type: 'out', text: "So glad to hear it! Mind leaving us a quick Google review? It really helps us out." },
+  ]
+};
+
+let chatTimeouts = [];
+
+function runPhoneDemo() {
+  chatTimeouts.forEach(id => clearTimeout(id));
+  chatTimeouts = [];
+  const container = document.getElementById('chatScroll');
+  container.innerHTML = '';
+  const script = chatScript[currentLang];
+  let delay = 300;
+
+  script.forEach(item => {
+    if (item.type === 'typing') {
+      const id = setTimeout(() => {
+        const typing = document.createElement('div');
+        typing.className = 'c-typing';
+        typing.id = 'typingNow';
+        typing.innerHTML = '<div></div><div></div><div></div>';
+        container.appendChild(typing);
+        requestAnimationFrame(() => typing.classList.add('show'));
+      }, delay);
+      chatTimeouts.push(id);
+      delay += 700;
+      return;
+    }
+    if (item.type === 'gap') { delay += 500; return; }
+
+    const id = setTimeout(() => {
+      const existingTyping = document.getElementById('typingNow');
+      if (existingTyping) existingTyping.remove();
+      const msg = document.createElement('div');
+      msg.className = 'c-msg ' + item.type;
+      msg.textContent = item.text;
+      container.appendChild(msg);
+      requestAnimationFrame(() => msg.classList.add('show'));
+      container.scrollTop = container.scrollHeight;
+    }, delay);
+    chatTimeouts.push(id);
+    delay += 1100;
+  });
+
+  const loopId = setTimeout(() => runPhoneDemo(), delay + 2500);
+  chatTimeouts.push(loopId);
+}
+
+applyLang(currentLang);
+
+document.getElementById('leForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  alert(currentLang === 'es' ? 'Gracias — te contactamos en menos de 24 horas.' : "Thanks — we'll reach out within 24 hours.");
+});
+</script>
+
+</body>
+</html>

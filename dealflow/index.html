@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealFlow — Lumenix Intelligence</title>
+<meta name="description" content="El papeleo de Florida, listo en menos de 2 minutos. Escanea, extrae, genera el paquete completo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04060F; --card: #0A0E1A; --card-border: rgba(0,180,255,0.10);
+    --card-border-hover: rgba(0,180,255,0.35); --text: #E8F4FF; --text2: #C4D9EE;
+    --text3: #9FBBD9; --accent: #00B4FF; --accent-dim: #0077AA; --green: #00E0A0; --red: #FF5C5C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+  a { text-decoration: none; color: inherit; }
+  .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.01em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 48px; background: rgba(4,6,15,0.85);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--card-border);
+  }
+  .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em; }
+  .nav-logo .mark { color: var(--accent); }
+  .nav-back { font-size: 13px; color: var(--text2); }
+  .nav-back:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .lang-toggle {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text2);
+    border: 1px solid var(--card-border); border-radius: 6px; padding: 7px 12px;
+    cursor: pointer; background: transparent; transition: all 0.2s ease;
+  }
+  .lang-toggle:hover { border-color: var(--accent); color: var(--text); }
+  .nav-cta { background: var(--accent); color: #04060F; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 700; }
+  @media (max-width: 700px) { .nav { padding: 18px 20px; } }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
+  @media (max-width: 700px) { .wrap { padding: 0 20px; } }
+
+  .eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); letter-spacing: 2px; margin-bottom: 14px; }
+
+  .sec-a { padding: 150px 0 70px; }
+  .sec-a-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+  .sec-a h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(34px, 4.2vw, 52px); line-height: 1.05; margin-bottom: 18px; }
+  .sec-a h1 .accent { color: var(--accent); }
+  .sec-a p { color: var(--text2); font-size: 16px; line-height: 1.6; max-width: 460px; margin-bottom: 14px; }
+  .sec-a .who { font-size: 13.5px; color: var(--text3); }
+
+  /* Document scan demo - reusing validated realistic license/title design */
+  .scan-demo {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 16px;
+    padding: 24px; max-width: 380px; margin-left: auto;
+  }
+  .scan-demo-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); letter-spacing: 1px; margin-bottom: 16px; display: flex; justify-content: space-between; }
+  .scan-status { color: var(--accent); }
+  .scan-status.done { color: var(--green); }
+
+  .doc-type-badge {
+    display: inline-block; background: var(--accent); color: #04060F;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 700;
+    padding: 3px 8px; border-radius: 4px; letter-spacing: 0.5px; margin-bottom: 10px;
+  }
+
+  .scan-screen { position: relative; height: 130px; border-radius: 10px; overflow: hidden; margin-bottom: 18px; }
+
+  .id-card-mini {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 92%; height: 108px; background: linear-gradient(135deg,#eef3f8,#dde6f0); border-radius: 8px; overflow: hidden;
+  }
+  .id-header-mini { height: 14px; background: linear-gradient(90deg,#1a3a5c,#0d2440); display: flex; align-items: center; padding: 0 8px; }
+  .id-header-mini span { font-size: 5px; color: #8fc4ff; font-weight: 700; letter-spacing: 0.4px; }
+  .id-body-mini { display: flex; padding: 8px; gap: 8px; }
+  .id-photo-mini { width: 26px; height: 32px; background: #a3b5c7; border-radius: 2px; flex-shrink: 0; }
+  .id-fields-mini { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+  .id-fields-mini .ifl { font-size: 4px; color: #4a6178; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; }
+  .id-fields-mini .ifv { font-size: 6.5px; color: #14202e; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+  .title-doc-mini {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 92%; height: 118px; background: linear-gradient(135deg,#f5f0e4,#ebe3d0); border-radius: 6px;
+    padding: 8px 10px; display: none;
+  }
+  .title-doc-mini .th { text-align: center; border-bottom: 1px solid #8a7a5c; padding-bottom: 4px; margin-bottom: 6px; }
+  .title-doc-mini .th .t1 { font-size: 5px; color: #6b5d42; font-weight: 700; letter-spacing: 0.5px; }
+  .title-doc-mini .th .t2 { font-size: 7px; color: #2b2416; font-weight: 800; }
+  .title-doc-mini .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 8px; }
+  .title-doc-mini .fld .lbl { font-size: 4px; color: #8a7a5c; font-weight: 700; text-transform: uppercase; }
+  .title-doc-mini .fld .val { font-size: 6px; color: #2b2416; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+  .scan-line-mini {
+    position: absolute; left: 4%; right: 4%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    box-shadow: 0 0 12px 2px rgba(0,180,255,0.6); top: 15%; opacity: 0;
+  }
+  .scan-line-mini.scanning { animation: scanMiniMove 1.8s cubic-bezier(0.4,0,0.2,1) infinite; }
+  @keyframes scanMiniMove { 0% { top: 15%; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 85%; opacity: 0; } }
+
+  .scan-fields { display: flex; flex-direction: column; gap: 8px; }
+  .sf-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 7px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .sf-label { font-size: 11px; color: var(--text3); }
+  .sf-value { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text); opacity: 0; transition: opacity 0.4s ease; }
+  .sf-value.filled { opacity: 1; }
+  .sf-check { width: 12px; height: 12px; opacity: 0; transition: opacity 0.3s ease; }
+  .sf-check.show { opacity: 1; }
+
+  @media (max-width: 860px) {
+    .sec-a-grid { grid-template-columns: 1fr; }
+    .sec-a { padding: 120px 0 50px; }
+    .scan-demo { margin-left: 0; }
+  }
+
+  .sec-b { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-b h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 36px; }
+  .beats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .beat {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 10px;
+    padding: 16px 14px; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  .beat.active { border-color: var(--accent); background: rgba(0,180,255,0.04); }
+  .beat-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); }
+  .beat.active .beat-num { color: var(--accent); }
+  .beat-icon { font-size: 20px; margin: 8px 0; }
+  .beat-text { font-size: 12.5px; color: var(--text2); line-height: 1.35; }
+  .beat.active .beat-text { color: var(--text); }
+  @media (max-width: 860px) { .beats { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .beats { grid-template-columns: repeat(2, 1fr); } }
+
+  .sec-c { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-c h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 36px; }
+  .install-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .install-num { font-family: 'JetBrains Mono', monospace; font-size: 26px; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
+  .install-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .install-desc { font-size: 13.5px; color: var(--text2); line-height: 1.5; }
+  @media (max-width: 860px) { .install-steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .install-steps { grid-template-columns: 1fr; } }
+
+  .sec-d { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-d h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 28px; }
+  .stop-list { display: flex; flex-direction: column; gap: 4px; }
+  .stop-item { display: flex; align-items: flex-start; gap: 14px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .stop-item:last-child { border-bottom: none; }
+  .stop-icon { color: var(--red); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .stop-text { font-size: 15px; color: var(--text); }
+
+  .sec-e { padding: 70px 0 100px; border-top: 1px solid var(--card-border); }
+  .cta-card {
+    background: var(--card); border: 1px solid var(--card-border); border-radius: 16px;
+    padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+  }
+  .cta-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 12px; }
+  .cta-card p { color: var(--text2); font-size: 15px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); letter-spacing: 1px; margin-bottom: 6px; }
+  .form-group input {
+    width: 100%; background: #0D1220; border: 1px solid var(--card-border); border-radius: 8px;
+    padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
+  }
+  .form-group input:focus { outline: none; border-color: var(--accent); }
+  .form-submit {
+    width: 100%; background: var(--accent); color: #04060F; border: none; padding: 14px;
+    border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; margin-top: 6px;
+  }
+  @media (max-width: 860px) { .cta-card { grid-template-columns: 1fr; padding: 32px 24px; } }
+
+  .footer { border-top: 1px solid var(--card-border); padding: 32px 0; }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text3); }
+  .footer-inner a { color: var(--text2); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><span class="mark">LMX</span> INTELLIGENCE</a>
+  <a href="/" class="nav-back" data-i18n="navBack">← Todos los servicios</a>
+  <div class="nav-right">
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+    <a href="#cta" class="nav-cta" data-i18n="navCta">Lo quiero</a>
+  </div>
+</nav>
+
+<section class="sec-a">
+  <div class="wrap sec-a-grid">
+    <div>
+      <div class="eyebrow" data-i18n="eyebrow">// PAPELEO DE FLORIDA EN MENOS DE 2 MINUTOS</div>
+      <h1 data-i18n-html="h1">Escanea la licencia. <span class="accent">El paquete se arma solo.</span></h1>
+      <p data-i18n="p1">Sin escribir, sin re-entrada de datos. El sistema extrae cada campo y genera el paquete completo, listo para firmar.</p>
+      <p class="who" data-i18n="who">Para dealers y compradores de vehículos que hoy arman el papeleo a mano.</p>
+    </div>
+
+    <div class="scan-demo">
+      <div class="scan-demo-label"><span id="docBadgeLabel" data-i18n="scanLabel">ESCANEANDO</span><span class="scan-status" id="scanStatus">EN PROCESO</span></div>
+      <div class="scan-screen">
+        <div class="id-card-mini" id="idCardMini">
+          <div class="id-header-mini"><span>FLORIDA · DRIVER LICENSE</span></div>
+          <div class="id-body-mini">
+            <div class="id-photo-mini"></div>
+            <div class="id-fields-mini">
+              <div><div class="ifl">Name</div><div class="ifv">RODRIGUEZ, JOHN A</div></div>
+              <div><div class="ifl">DL Number</div><div class="ifv">R123-456-78-901</div></div>
+              <div><div class="ifl">Address</div><div class="ifv">4210 SW 61ST AVE</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="title-doc-mini" id="titleDocMini">
+          <div class="th"><div class="t1">STATE OF FLORIDA</div><div class="t2">CERTIFICATE OF TITLE</div></div>
+          <div class="grid">
+            <div class="fld"><div class="lbl">VIN</div><div class="val">1HGCM82633A004352</div></div>
+            <div class="fld"><div class="lbl">Year/Make</div><div class="val">2019 HONDA</div></div>
+            <div class="fld"><div class="lbl">Model</div><div class="val">ACCORD LX</div></div>
+            <div class="fld"><div class="lbl">Odometer</div><div class="val">54,281 MI</div></div>
+          </div>
+        </div>
+        <div class="scan-line-mini" id="scanLineMini"></div>
+      </div>
+      <div class="scan-fields" id="scanFields">
+        <div class="sf-row"><span class="sf-label" data-i18n="fldName">Nombre</span><span class="sf-value" id="f1">RODRIGUEZ, JOHN A</span><svg class="sf-check" id="c1" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#00E0A0"/><path d="M4.5 8L7 10.5L11.5 5.5" stroke="#04060F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sf-row"><span class="sf-label" data-i18n="fldLicense">Licencia No.</span><span class="sf-value" id="f2">R123-456-78-901</span><svg class="sf-check" id="c2" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#00E0A0"/><path d="M4.5 8L7 10.5L11.5 5.5" stroke="#04060F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sf-row"><span class="sf-label" data-i18n="fldAddress">Dirección</span><span class="sf-value" id="f3">4210 SW 61st Ave, FL</span><svg class="sf-check" id="c3" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#00E0A0"/><path d="M4.5 8L7 10.5L11.5 5.5" stroke="#04060F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sf-row"><span class="sf-label" data-i18n="fldVin">VIN</span><span class="sf-value" id="f4">1HGCM82633A004352</span><svg class="sf-check" id="c4" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#00E0A0"/><path d="M4.5 8L7 10.5L11.5 5.5" stroke="#04060F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sf-row"><span class="sf-label" data-i18n="fldYearMake">Año/Marca</span><span class="sf-value" id="f5">2019 HONDA ACCORD</span><svg class="sf-check" id="c5" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#00E0A0"/><path d="M4.5 8L7 10.5L11.5 5.5" stroke="#04060F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="sf-row"><span class="sf-label" data-i18n="fldOdo">Odómetro</span><span class="sf-value" id="f6">54,281 mi</span><svg class="sf-check" id="c6" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="8" fill="#00E0A0"/><path d="M4.5 8L7 10.5L11.5 5.5" stroke="#04060F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-b">
+  <div class="wrap">
+    <h2 data-i18n="secBTitle">Así se ve funcionando</h2>
+    <div class="beats" id="beats">
+      <div class="beat" data-i="0"><div class="beat-num">01</div><div class="beat-icon">🪪</div><div class="beat-text" data-i18n="beat1">Suelta la licencia</div></div>
+      <div class="beat" data-i="1"><div class="beat-num">02</div><div class="beat-icon">📄</div><div class="beat-text" data-i18n="beat2">Suelta el título</div></div>
+      <div class="beat" data-i="2"><div class="beat-num">03</div><div class="beat-icon">🔒</div><div class="beat-text" data-i18n="beat3">Los campos quedan fijos</div></div>
+      <div class="beat" data-i="3"><div class="beat-num">04</div><div class="beat-icon">📑</div><div class="beat-text" data-i18n="beat4">Paquete se genera (7 docs)</div></div>
+      <div class="beat" data-i="4"><div class="beat-num">05</div><div class="beat-icon">👁️</div><div class="beat-text" data-i18n="beat5">Revisa y edita</div></div>
+      <div class="beat" data-i="5"><div class="beat-num">06</div><div class="beat-icon">✍️</div><div class="beat-text" data-i18n="beat6">Firma o imprime</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-c">
+  <div class="wrap">
+    <h2 data-i18n="secCTitle">Cómo se instala</h2>
+    <div class="install-steps">
+      <div><div class="install-num">01</div><div class="install-title" data-i18n="i1t">Lo que necesitamos</div><div class="install-desc" data-i18n="i1d">Tus plantillas de documentos de Florida y el flujo exacto de tus deals.</div></div>
+      <div><div class="install-num">02</div><div class="install-title" data-i18n="i2t">Lo que construimos</div><div class="install-desc" data-i18n="i2d">El escáner, la extracción de datos, y la generación del paquete completo.</div></div>
+      <div><div class="install-num">03</div><div class="install-title" data-i18n="i3t">Cómo entra al día a día</div><div class="install-desc" data-i18n="i3d">Escaneas con el teléfono, revisas, firmas. Nada más.</div></div>
+      <div><div class="install-num">04</div><div class="install-title" data-i18n="i4t">Cuándo queda vivo</div><div class="install-desc" data-i18n="i4d">Una semana, probado con tus propios deals antes de firmar.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-d">
+  <div class="wrap">
+    <h2 data-i18n="secDTitle">Lo que dejas de hacer</h2>
+    <div class="stop-list">
+      <div class="stop-item"><span class="stop-icon">✕</span><span class="stop-text" data-i18n="stop1">Escribir la misma información en 7 documentos distintos</span></div>
+      <div class="stop-item"><span class="stop-icon">✕</span><span class="stop-text" data-i18n="stop2">Errores de dedo que cuestan más que el sistema completo</span></div>
+      <div class="stop-item"><span class="stop-icon">✕</span><span class="stop-text" data-i18n="stop3">Deals atrasados por papeleo, no por el cliente</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-e" id="cta">
+  <div class="wrap">
+    <div class="cta-card">
+      <div>
+        <h2 data-i18n="ctaTitle">Pruébalo con un deal real.</h2>
+        <p data-i18n="ctaSub">Ves el sistema funcionando con tus propios documentos antes de decidir.</p>
+      </div>
+      <form id="leForm">
+        <div class="form-group"><label data-i18n="fName">TU NOMBRE</label><input type="text" placeholder="Juan Pérez" required></div>
+        <div class="form-group"><label data-i18n="fBiz">NOMBRE DEL NEGOCIO</label><input type="text" placeholder="South Florida Motors" required></div>
+        <div class="form-group"><label data-i18n="fPhone">TELÉFONO</label><input type="tel" placeholder="+1 (754) 000-0000" required></div>
+        <button type="submit" class="form-submit" data-i18n="fSubmit">Lo quiero →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div data-i18n="footerLeft">Lumenix Intelligence · South Florida · Juan Martinez, Founder</div>
+    <div><a href="tel:+17546104417">(754) 610-4417</a> &nbsp;&nbsp; <a href="mailto:juan@lumenixintelligence.com">juan@lumenixintelligence.com</a></div>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  es: {
+    navBack: "← Todos los servicios", navCta: "Lo quiero",
+    eyebrow: "// PAPELEO DE FLORIDA EN MENOS DE 2 MINUTOS",
+    h1: 'Escanea la licencia. <span class="accent">El paquete se arma solo.</span>',
+    p1: "Sin escribir, sin re-entrada de datos. El sistema extrae cada campo y genera el paquete completo, listo para firmar.",
+    who: "Para dealers y compradores de vehículos que hoy arman el papeleo a mano.",
+    scanLabel: "ESCANEANDO", fldName: "Nombre", fldLicense: "Licencia No.", fldAddress: "Dirección", fldVin: "VIN", fldYearMake: "Año/Marca", fldOdo: "Odómetro",
+    secBTitle: "Así se ve funcionando",
+    beat1: "Suelta la licencia", beat2: "Suelta el título", beat3: "Los campos quedan fijos",
+    beat4: "Paquete se genera (7 docs)", beat5: "Revisa y edita", beat6: "Firma o imprime",
+    secCTitle: "Cómo se instala",
+    i1t: "Lo que necesitamos", i1d: "Tus plantillas de documentos de Florida y el flujo exacto de tus deals.",
+    i2t: "Lo que construimos", i2d: "El escáner, la extracción de datos, y la generación del paquete completo.",
+    i3t: "Cómo entra al día a día", i3d: "Escaneas con el teléfono, revisas, firmas. Nada más.",
+    i4t: "Cuándo queda vivo", i4d: "Una semana, probado con tus propios deals antes de firmar.",
+    secDTitle: "Lo que dejas de hacer",
+    stop1: "Escribir la misma información en 7 documentos distintos",
+    stop2: "Errores de dedo que cuestan más que el sistema completo",
+    stop3: "Deals atrasados por papeleo, no por el cliente",
+    ctaTitle: "Pruébalo con un deal real.",
+    ctaSub: "Ves el sistema funcionando con tus propios documentos antes de decidir.",
+    fName: "TU NOMBRE", fBiz: "NOMBRE DEL NEGOCIO", fPhone: "TELÉFONO", fSubmit: "Lo quiero →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  },
+  en: {
+    navBack: "← All services", navCta: "I want this",
+    eyebrow: "// FLORIDA PAPERWORK IN UNDER 2 MINUTES",
+    h1: 'Scan the license. <span class="accent">The package builds itself.</span>',
+    p1: "No typing, no re-entry. The system extracts every field and generates the full package, ready to sign.",
+    who: "For dealers and vehicle buyers who build paperwork by hand today.",
+    scanLabel: "SCANNING", fldName: "Name", fldLicense: "License No.", fldAddress: "Address", fldVin: "VIN", fldYearMake: "Year/Make", fldOdo: "Odometer",
+    secBTitle: "Here's what it looks like",
+    beat1: "Drop the license", beat2: "Drop the title", beat3: "Fields lock in",
+    beat4: "Package generates (7 docs)", beat5: "Review + edit", beat6: "Sign / print",
+    secCTitle: "How it gets installed",
+    i1t: "What we need", i1d: "Your Florida document templates and your exact deal flow.",
+    i2t: "What we build", i2d: "The scanner, data extraction, and full package generation.",
+    i3t: "How it enters your day-to-day", i3d: "You scan with your phone, review, sign. That's it.",
+    i4t: "When it goes live", i4d: "One week, tested on your own deals before you sign anything.",
+    secDTitle: "What you stop doing",
+    stop1: "Typing the same information into 7 different documents",
+    stop2: "Typos that cost more than the system itself",
+    stop3: "Deals stuck on paperwork, not on the customer",
+    ctaTitle: "Try it on a real deal.",
+    ctaSub: "See the system run with your own documents before you decide.",
+    fName: "YOUR NAME", fBiz: "BUSINESS NAME", fPhone: "PHONE", fSubmit: "I want this →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  }
+};
+
+let currentLang = 'es';
+
+function applyLang(lang) {
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[key]) el.innerHTML = t[key];
+  });
+  document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
+  document.documentElement.lang = lang;
+  runPhoneDemo();
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  applyLang(currentLang);
+}
+
+let beatIndex = 0;
+const beats = document.querySelectorAll('.beat');
+function cycleBeats() {
+  beats.forEach(b => b.classList.remove('active'));
+  beats[beatIndex].classList.add('active');
+  beatIndex = (beatIndex + 1) % beats.length;
+}
+cycleBeats();
+setInterval(cycleBeats, 1300);
+
+let dealflowTimeouts = [];
+
+function runPhoneDemo() {
+  dealflowTimeouts.forEach(id => clearTimeout(id));
+  dealflowTimeouts = [];
+
+  const scanLine = document.getElementById('scanLineMini');
+  const status = document.getElementById('scanStatus');
+  const badge = document.getElementById('docBadgeLabel');
+  const idCard = document.getElementById('idCardMini');
+  const titleDoc = document.getElementById('titleDocMini');
+  const licenseFields = ['f1','f2','f3'];
+  const titleFields = ['f4','f5','f6'];
+  const allFields = licenseFields.concat(titleFields);
+  const allChecks = ['c1','c2','c3','c4','c5','c6'];
+
+  allFields.forEach(id => document.getElementById(id).classList.remove('filled'));
+  allChecks.forEach(id => document.getElementById(id).classList.remove('show'));
+  scanLine.classList.remove('scanning');
+  idCard.style.display = 'block';
+  titleDoc.style.display = 'none';
+  status.textContent = currentLang === 'es' ? 'EN PROCESO' : 'IN PROGRESS';
+  status.classList.remove('done');
+
+  void scanLine.offsetWidth;
+  scanLine.classList.add('scanning');
+
+  // Phase 1: scan license, extract 3 fields
+  licenseFields.forEach((id, i) => {
+    const t = setTimeout(() => {
+      document.getElementById(id).classList.add('filled');
+      document.getElementById(allChecks[licenseFields.indexOf(id)]).classList.add('show');
+    }, 700 + i * 450);
+    dealflowTimeouts.push(t);
+  });
+
+  // Phase 2: switch to title document
+  const switchT = setTimeout(() => {
+    idCard.style.display = 'none';
+    titleDoc.style.display = 'block';
+    void scanLine.offsetWidth; scanLine.classList.remove('scanning');
+    void scanLine.offsetWidth; scanLine.classList.add('scanning');
+  }, 2500);
+  dealflowTimeouts.push(switchT);
+
+  // Phase 3: extract title fields
+  titleFields.forEach((id, i) => {
+    const t = setTimeout(() => {
+      document.getElementById(id).classList.add('filled');
+      document.getElementById(allChecks[3 + i]).classList.add('show');
+    }, 3000 + i * 450);
+    dealflowTimeouts.push(t);
+  });
+
+  // Phase 4: complete, hold, then loop forever
+  const doneT = setTimeout(() => {
+    status.textContent = currentLang === 'es' ? 'LISTO' : 'READY';
+    status.classList.add('done');
+    scanLine.classList.remove('scanning');
+  }, 4500);
+  dealflowTimeouts.push(doneT);
+
+  const loopT = setTimeout(() => runPhoneDemo(), 6500);
+  dealflowTimeouts.push(loopT);
+}
+
+applyLang(currentLang);
+
+document.getElementById('leForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  alert(currentLang === 'es' ? 'Gracias — te contactamos en menos de 24 horas.' : "Thanks — we'll reach out within 24 hours.");
+});
+</script>
+
+</body>
+</html>
