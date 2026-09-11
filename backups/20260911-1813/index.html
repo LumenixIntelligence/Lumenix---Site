@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talleres — Lumenix Intelligence</title>
+<meta name="description" content="Landing muerta = lead muerto. Página, respuesta automática y reseñas para talleres mecánicos independientes en South Florida.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04060F;
+    --card: #0A0E1A;
+    --card-border: rgba(0,180,255,0.10);
+    --card-border-hover: rgba(0,180,255,0.35);
+    --text: #E8F4FF;
+    --text2: #C4D9EE;
+    --text3: #9FBBD9;
+    --accent: #00B4FF;
+    --accent-dim: #0077AA;
+    --green: #00E0A0;
+    --red: #FF5C5C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  .display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.01em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* NAV */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 48px;
+    background: rgba(4,6,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 0.06em;
+  }
+  .nav-logo .mark { color: var(--accent); }
+  .nav-back {
+    font-size: 13px; color: var(--text2);
+  }
+  .nav-back:hover { color: var(--text); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .lang-toggle {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text2);
+    border: 1px solid var(--card-border); border-radius: 6px; padding: 7px 12px;
+    cursor: pointer; background: transparent; transition: all 0.2s ease;
+  }
+  .lang-toggle:hover { border-color: var(--accent); color: var(--text); }
+  .nav-cta {
+    background: var(--accent); color: #04060F; padding: 10px 20px;
+    border-radius: 6px; font-size: 14px; font-weight: 700;
+  }
+  @media (max-width: 700px) { .nav { padding: 18px 20px; } }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
+  @media (max-width: 700px) { .wrap { padding: 0 20px; } }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--accent);
+    letter-spacing: 2px; margin-bottom: 14px;
+  }
+
+  /* SECTION A - HERO / WHAT IT IS */
+  .sec-a {
+    padding: 150px 0 70px;
+  }
+  .sec-a-grid {
+    display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center;
+  }
+  .sec-a h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(34px, 4.2vw, 52px);
+    line-height: 1.05;
+    margin-bottom: 18px;
+  }
+  .sec-a h1 .accent { color: var(--accent); }
+  .sec-a p {
+    color: var(--text2); font-size: 16px; line-height: 1.6; max-width: 460px; margin-bottom: 14px;
+  }
+  .sec-a .who {
+    font-size: 13.5px; color: var(--text3);
+  }
+
+  /* before/after visual */
+  .ba-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 22px;
+  }
+  .ba-row {
+    display: flex; align-items: center; gap: 12px; padding: 12px 0;
+  }
+  .ba-row:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .ba-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 3px 8px; border-radius: 4px; flex-shrink: 0; width: 50px; text-align: center;
+  }
+  .ba-tag.before { background: rgba(255,92,92,0.1); color: var(--red); }
+  .ba-tag.after { background: rgba(0,224,160,0.1); color: var(--green); }
+  .ba-text { font-size: 13.5px; color: var(--text); }
+  .ba-text.dim { color: var(--text3); }
+
+  @media (max-width: 860px) {
+    .sec-a-grid { grid-template-columns: 1fr; }
+    .sec-a { padding: 120px 0 50px; }
+  }
+
+  /* SECTION B - SEE IT WORK */
+  .sec-b { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-b h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 36px; }
+
+  .beats {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;
+  }
+  .beat {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 16px 14px; min-height: 130px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+  .beat.active { border-color: var(--accent); background: rgba(0,180,255,0.04); }
+  .beat-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3);
+  }
+  .beat.active .beat-num { color: var(--accent); }
+  .beat-icon { font-size: 20px; margin: 8px 0; }
+  .beat-text { font-size: 12.5px; color: var(--text2); line-height: 1.35; }
+  .beat.active .beat-text { color: var(--text); }
+
+  @media (max-width: 860px) {
+    .beats { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .beats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* SECTION C - HOW IT GETS INSTALLED */
+  .sec-c { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-c h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 36px; }
+
+  .install-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .install-step {
+    padding-left: 0;
+  }
+  .install-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 26px; color: var(--accent);
+    margin-bottom: 10px; font-weight: 700;
+  }
+  .install-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .install-desc { font-size: 13.5px; color: var(--text2); line-height: 1.5; }
+
+  .timeline-note {
+    margin-top: 32px; padding: 16px 20px; background: var(--card);
+    border: 1px solid var(--card-border); border-radius: 10px;
+    font-size: 14px; color: var(--text2); display: flex; align-items: center; gap: 10px;
+  }
+  .timeline-note strong { color: var(--accent); }
+
+  @media (max-width: 860px) {
+    .install-steps { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .install-steps { grid-template-columns: 1fr; }
+  }
+
+  /* SECTION D - WHAT THEY STOP DOING */
+  .sec-d { padding: 60px 0; border-top: 1px solid var(--card-border); }
+  .sec-d h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 28px; }
+  .stop-list { display: flex; flex-direction: column; gap: 4px; }
+  .stop-item {
+    display: flex; align-items: flex-start; gap: 14px; padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .stop-item:last-child { border-bottom: none; }
+  .stop-icon { color: var(--red); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .stop-text { font-size: 15px; color: var(--text); }
+
+  /* SECTION E - CTA */
+  .sec-e { padding: 70px 0 100px; border-top: 1px solid var(--card-border); }
+  .cta-card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 16px; padding: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
+  }
+  .cta-card h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px, 3.2vw, 38px); margin-bottom: 12px; }
+  .cta-card p { color: var(--text2); font-size: 15px; }
+  .cta-quote { margin-top: 20px; font-size: 14px; color: var(--accent); font-style: italic; }
+
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--text3); letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .form-group input {
+    width: 100%; background: #0D1220; border: 1px solid var(--card-border);
+    border-radius: 8px; padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px;
+  }
+  .form-group input:focus { outline: none; border-color: var(--accent); }
+  .form-submit {
+    width: 100%; background: var(--accent); color: #04060F; border: none;
+    padding: 14px; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 860px) {
+    .cta-card { grid-template-columns: 1fr; padding: 32px 24px; }
+  }
+
+  /* FOOTER */
+  .footer { border-top: 1px solid var(--card-border); padding: 32px 0; }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text3);
+  }
+  .footer-inner a { color: var(--text2); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><span class="mark">LMX</span> INTELLIGENCE</a>
+  <a href="/" class="nav-back" data-i18n="navBack">← Todos los servicios</a>
+  <div class="nav-right">
+    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+    <a href="#cta" class="nav-cta" data-i18n="navCta">Arma la mía</a>
+  </div>
+</nav>
+
+<!-- SECTION A -->
+<section class="sec-a">
+  <div class="wrap sec-a-grid">
+    <div>
+      <div class="eyebrow" data-i18n="eyebrow">// WEB + FOLLOW-UP PARA TALLERES</div>
+      <h1 data-i18n-html="h1">Tu taller no tiene página.<br>O la tiene <span class="accent">muerta.</span></h1>
+      <p data-i18n="p1">El cliente llama, nadie contesta a tiempo, y se va con otro taller. Una página que responde por ti, aunque estés bajo un carro.</p>
+      <p class="who" data-i18n="who">Para talleres independientes, hojalatería, mecánicos móviles y especialistas en performance. No para cadenas.</p>
+    </div>
+
+    <div class="ba-card">
+      <div class="ba-row">
+        <span class="ba-tag before" data-i18n="baBefore">ANTES</span>
+        <span class="ba-text dim" data-i18n="baBeforeText">Maps → Facebook o sitio caído → llamada perdida</span>
+      </div>
+      <div class="ba-row">
+        <span class="ba-tag after" data-i18n="baAfter">AHORA</span>
+        <span class="ba-text" data-i18n="baAfterText">Maps → página en vivo → texto + pipeline</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION B - SEE IT WORK -->
+<section class="sec-b">
+  <div class="wrap">
+    <h2 data-i18n="secBTitle">Así se ve funcionando</h2>
+    <div class="beats" id="beats">
+      <div class="beat" data-i="0">
+        <div class="beat-num">01</div>
+        <div class="beat-icon">🔍</div>
+        <div class="beat-text" data-i18n="beat1">Cliente busca el taller en Google</div>
+      </div>
+      <div class="beat" data-i="1">
+        <div class="beat-num">02</div>
+        <div class="beat-icon">📄</div>
+        <div class="beat-text" data-i18n="beat2">Llega a una página que sí carga</div>
+      </div>
+      <div class="beat" data-i="2">
+        <div class="beat-num">03</div>
+        <div class="beat-icon">🔧</div>
+        <div class="beat-text" data-i18n="beat3">Agenda o pide su estimado</div>
+      </div>
+      <div class="beat" data-i="3">
+        <div class="beat-num">04</div>
+        <div class="beat-icon">💬</div>
+        <div class="beat-text" data-i18n="beat4">Recibe SMS en menos de 90s</div>
+      </div>
+      <div class="beat" data-i="4">
+        <div class="beat-num">05</div>
+        <div class="beat-icon">📞</div>
+        <div class="beat-text" data-i18n="beat5">El dueño recibe el lead directo</div>
+      </div>
+      <div class="beat" data-i="5">
+        <div class="beat-num">06</div>
+        <div class="beat-icon">⭐</div>
+        <div class="beat-text" data-i18n="beat6">Al terminar, se pide la reseña</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION C - HOW IT GETS INSTALLED -->
+<section class="sec-c">
+  <div class="wrap">
+    <h2 data-i18n="secCTitle">Cómo se instala</h2>
+    <div class="install-steps">
+      <div class="install-step">
+        <div class="install-num">01</div>
+        <div class="install-title" data-i18n="i1t">Lo que necesitamos</div>
+        <div class="install-desc" data-i18n="i1d">Nombre, teléfono, horario, 8–12 fotos, y los servicios que ofreces.</div>
+      </div>
+      <div class="install-step">
+        <div class="install-num">02</div>
+        <div class="install-title" data-i18n="i2t">Lo que construimos</div>
+        <div class="install-desc" data-i18n="i2d">Tu página con tu marca, en español o inglés, lista para recibir clientes.</div>
+      </div>
+      <div class="install-step">
+        <div class="install-num">03</div>
+        <div class="install-title" data-i18n="i3t">Cómo entra al día a día</div>
+        <div class="install-desc" data-i18n="i3d">Formulario, SMS y texto de llamada perdida quedan activos solos. Tú solo respondes lo que ya llegó.</div>
+      </div>
+      <div class="install-step">
+        <div class="install-num">04</div>
+        <div class="install-title" data-i18n="i4t">Cuándo queda vivo</div>
+        <div class="install-desc" data-i18n="i4d">Días, no semanas.</div>
+      </div>
+    </div>
+    <div class="timeline-note">
+      <span class="mono">i</span>
+      <span data-i18n-html="timelineNote">Un sitio viejo de plantilla (Hibu, cupón vencido, dominio equivocado) <strong>cuenta como no tener sitio.</strong></span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION D -->
+<section class="sec-d">
+  <div class="wrap">
+    <h2 data-i18n="secDTitle">Lo que dejas de hacer</h2>
+    <div class="stop-list">
+      <div class="stop-item">
+        <span class="stop-icon">✕</span>
+        <span class="stop-text" data-i18n="stop1">Perder al que colgó después de dos timbrazos</span>
+      </div>
+      <div class="stop-item">
+        <span class="stop-icon">✕</span>
+        <span class="stop-text" data-i18n="stop2">Pedir reseñas de memoria, cuando te acuerdas</span>
+      </div>
+      <div class="stop-item">
+        <span class="stop-icon">✕</span>
+        <span class="stop-text" data-i18n="stop3">Mandar gente a un muro de Facebook desactualizado</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION E - CTA -->
+<section class="sec-e" id="cta">
+  <div class="wrap">
+    <div class="cta-card">
+      <div>
+        <h2 data-i18n="ctaTitle">Landing muerta = lead muerto.</h2>
+        <p data-i18n="ctaSub">No vendemos "una página bonita". Vendemos que el próximo estimado no desaparezca.</p>
+        <p class="cta-quote" data-i18n="ctaQuote">"El lead llama, nadie responde, se va." — así pierde clientes hoy la mayoría de talleres.</p>
+      </div>
+      <form id="shopForm">
+        <div class="form-group">
+          <label data-i18n="fName">TU NOMBRE</label>
+          <input type="text" placeholder="Juan Pérez" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="fBiz">NOMBRE DEL TALLER</label>
+          <input type="text" placeholder="South Florida Auto Repair" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="fPhone">TELÉFONO</label>
+          <input type="tel" placeholder="+1 (754) 000-0000" required>
+        </div>
+        <button type="submit" class="form-submit" data-i18n="fSubmit">Arma la mía →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div data-i18n="footerLeft">Lumenix Intelligence · South Florida · Juan Martinez, Founder</div>
+    <div><a href="tel:+17546104417">(754) 610-4417</a> &nbsp;&nbsp; <a href="mailto:juan@lumenixintelligence.com">juan@lumenixintelligence.com</a></div>
+  </div>
+</footer>
+
+<script>
+const translations = {
+  es: {
+    navBack: "← Todos los servicios", navCta: "Arma la mía",
+    eyebrow: "// WEB + FOLLOW-UP PARA TALLERES",
+    h1: 'Tu taller no tiene página.<br>O la tiene <span class="accent">muerta.</span>',
+    p1: "El cliente llama, nadie contesta a tiempo, y se va con otro taller. Una página que responde por ti, aunque estés bajo un carro.",
+    who: "Para talleres independientes, hojalatería, mecánicos móviles y especialistas en performance. No para cadenas.",
+    baBefore: "ANTES", baBeforeText: "Maps → Facebook o sitio caído → llamada perdida",
+    baAfter: "AHORA", baAfterText: "Maps → página en vivo → texto + pipeline",
+    secBTitle: "Así se ve funcionando",
+    beat1: "Cliente busca el taller en Google", beat2: "Llega a una página que sí carga",
+    beat3: "Agenda o pide su estimado", beat4: "Recibe SMS en menos de 90s",
+    beat5: "El dueño recibe el lead directo", beat6: "Al terminar, se pide la reseña",
+    secCTitle: "Cómo se instala",
+    i1t: "Lo que necesitamos", i1d: "Nombre, teléfono, horario, 8–12 fotos, y los servicios que ofreces.",
+    i2t: "Lo que construimos", i2d: "Tu página con tu marca, en español o inglés, lista para recibir clientes.",
+    i3t: "Cómo entra al día a día", i3d: "Formulario, SMS y texto de llamada perdida quedan activos solos. Tú solo respondes lo que ya llegó.",
+    i4t: "Cuándo queda vivo", i4d: "Días, no semanas.",
+    timelineNote: 'Un sitio viejo de plantilla (Hibu, cupón vencido, dominio equivocado) <strong>cuenta como no tener sitio.</strong>',
+    secDTitle: "Lo que dejas de hacer",
+    stop1: "Perder al que colgó después de dos timbrazos",
+    stop2: "Pedir reseñas de memoria, cuando te acuerdas",
+    stop3: "Mandar gente a un muro de Facebook desactualizado",
+    ctaTitle: "Landing muerta = lead muerto.",
+    ctaSub: 'No vendemos "una página bonita". Vendemos que el próximo estimado no desaparezca.',
+    ctaQuote: '"El lead llama, nadie responde, se va." — así pierde clientes hoy la mayoría de talleres.',
+    fName: "TU NOMBRE", fBiz: "NOMBRE DEL TALLER", fPhone: "TELÉFONO", fSubmit: "Arma la mía →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  },
+  en: {
+    navBack: "← All services", navCta: "Build mine",
+    eyebrow: "// WEBSITE + FOLLOW-UP FOR AUTO SHOPS",
+    h1: "Your shop doesn't have a site.<br>Or it's <span class=\"accent\">dead.</span>",
+    p1: "The customer calls, no one answers in time, and they go to the next shop. A page that answers for you, even while you're under a car.",
+    who: "For independent repair shops, body shops, mobile mechanics and performance specialists. Not for chains.",
+    baBefore: "BEFORE", baBeforeText: "Maps → Facebook or dead site → missed call",
+    baAfter: "AFTER", baAfterText: "Maps → live page → text + pipeline",
+    secBTitle: "Here's what it looks like",
+    beat1: "Customer Googles the shop", beat2: "Lands on a page that loads",
+    beat3: "Books or requests an estimate", beat4: "Gets SMS in under 90s",
+    beat5: "Owner gets the lead directly", beat6: "After the job, review request fires",
+    secCTitle: "How it gets installed",
+    i1t: "What we need", i1d: "Name, phone, hours, 8–12 photos, and the services you offer.",
+    i2t: "What we build", i2d: "Your page in your branding, in English or Spanish, ready for customers.",
+    i3t: "How it enters your day-to-day", i3d: "Form, SMS, and missed-call text go live on their own. You only answer conversations that already arrived.",
+    i4t: "When it goes live", i4d: "Days, not weeks.",
+    timelineNote: 'An old template site (Hibu, expired coupon, wrong domain) <strong>counts as no website.</strong>',
+    secDTitle: "What you stop doing",
+    stop1: "Losing the person who hung up after 2 rings",
+    stop2: "Asking for reviews by memory",
+    stop3: "Sending people to a dead Facebook wall",
+    ctaTitle: "Dead landing = dead lead.",
+    ctaSub: "We don't sell 'a pretty site'. We sell that the next estimate doesn't disappear.",
+    ctaQuote: '"The lead calls, no one answers, they leave." — that&#39;s how most shops lose customers today.',
+    fName: "YOUR NAME", fBiz: "SHOP NAME", fPhone: "PHONE", fSubmit: "Build mine →",
+    footerLeft: "Lumenix Intelligence · South Florida · Juan Martinez, Founder",
+  }
+};
+
+let currentLang = 'es';
+
+function applyLang(lang) {
+  const t = translations[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (t[key]) el.innerHTML = t[key];
+  });
+  document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
+  document.documentElement.lang = lang;
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'es' ? 'en' : 'es';
+  applyLang(currentLang);
+}
+
+let beatIndex = 0;
+const beats = document.querySelectorAll('.beat');
+function cycleBeats() {
+  beats.forEach(b => b.classList.remove('active'));
+  beats[beatIndex].classList.add('active');
+  beatIndex = (beatIndex + 1) % beats.length;
+}
+cycleBeats();
+setInterval(cycleBeats, 1400);
+
+applyLang(currentLang);
+
+document.getElementById('shopForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  alert(currentLang === 'es' ? 'Gracias — te contactamos en menos de 24 horas.' : "Thanks — we'll reach out within 24 hours.");
+});
+</script>
+
+</body>
+</html>
