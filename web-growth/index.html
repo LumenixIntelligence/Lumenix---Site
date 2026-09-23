@@ -267,7 +267,7 @@
         <p data-i18n="ctaSub">Tu web, tu conversación, y tus reseñas, corriendo solas mientras trabajas.</p>
       </div>
       <form id="leForm">
-        <div class="form-group"><label data-i18n="fName">TU NOMBRE</label><input type="text" name="name" placeholder="Juan Pérez" required></div>
+        <div class="form-group"><label data-i18n="fName">TU NOMBRE</label><input type="text" name="fullname" placeholder="Juan Pérez" required></div>
         <div class="form-group"><label data-i18n="fBiz">NOMBRE DEL NEGOCIO</label><input type="text" name="business" placeholder="South Florida Motors" required></div>
         <div class="form-group"><label data-i18n="fPhone">TELÉFONO</label><input type="tel" name="phone" placeholder="+1 (754) 000-0000" required></div>
         <button type="submit" class="form-submit" data-i18n="fSubmit">Lo quiero →</button>
@@ -478,7 +478,7 @@ document.getElementById('leForm').addEventListener('submit', async function(e) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: form.name.value,
+        name: form.fullname.value,
         business: form.business.value,
         phone: form.phone.value,
         source: 'web-growth',

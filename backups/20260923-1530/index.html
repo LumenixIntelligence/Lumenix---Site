@@ -384,7 +384,7 @@
       <form id="shopForm">
         <div class="form-group">
           <label data-i18n="fName">TU NOMBRE</label>
-          <input type="text" name="fullname" placeholder="Juan Pérez" required>
+          <input type="text" name="name" placeholder="Juan Pérez" required>
         </div>
         <div class="form-group">
           <label data-i18n="fBiz">NOMBRE DEL TALLER</label>
@@ -526,7 +526,7 @@ document.getElementById('shopForm').addEventListener('submit', async function(e)
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: form.fullname.value,
+        name: form.name.value,
         business: form.business.value,
         phone: form.phone.value,
         source: 'talleres',
