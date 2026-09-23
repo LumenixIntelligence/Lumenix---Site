@@ -38,6 +38,20 @@
     cursor: pointer; background: transparent; transition: all 0.2s ease;
   }
   .lang-toggle:hover { border-color: var(--accent); color: var(--text); }
+  .lang-toggle-wrap { position: relative; display: inline-flex; }
+  .lang-hint {
+    position: absolute; top: 130%; right: 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent);
+    white-space: nowrap; background: var(--bg); border: 1px solid var(--accent);
+    border-radius: 4px; padding: 4px 8px; z-index: 10; pointer-events: none;
+    animation: hint-bounce 1.6s ease-in-out infinite;
+  }
+  .lang-hint::before {
+    content: ''; position: absolute; top: -5px; right: 14px; width: 8px; height: 8px;
+    background: var(--bg); border-left: 1px solid var(--accent); border-top: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+  @keyframes hint-bounce { 0%, 100% { transform: translateY(0); opacity: 0.85; } 50% { transform: translateY(-3px); opacity: 1; } }
   .nav-cta { background: var(--accent); color: #04060F; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 700; }
   @media (max-width: 700px) { .nav { padding: 18px 20px; } }
 
@@ -181,7 +195,10 @@
   <a href="/" class="nav-logo"><span class="mark">LMX</span> INTELLIGENCE</a>
   <a href="/" class="nav-back" data-i18n="navBack">← Todos los servicios</a>
   <div class="nav-right">
-    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+    <div class="lang-toggle-wrap">
+      <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+      <span class="lang-hint" id="langHint">Español?</span>
+    </div>
     <a href="#cta" class="nav-cta" data-i18n="navCta">Lo quiero</a>
   </div>
 </nav>
@@ -345,7 +362,7 @@ const translations = {
   }
 };
 
-let currentLang = 'es';
+let currentLang = localStorage.getItem('lumenix_lang') || 'en';
 
 function applyLang(lang) {
   const t = translations[lang];
@@ -358,13 +375,26 @@ function applyLang(lang) {
     if (t[key]) el.innerHTML = t[key];
   });
   document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
+  updateLangHint(lang);
   document.documentElement.lang = lang;
   runPhoneDemo();
 }
 
 function toggleLang() {
   currentLang = currentLang === 'es' ? 'en' : 'es';
+  localStorage.setItem('lumenix_lang', currentLang);
+  localStorage.setItem('lumenix_hint_seen', '1');
   applyLang(currentLang);
+}
+
+function updateLangHint(lang) {
+  const hint = document.getElementById('langHint');
+  if (!hint) return;
+  if (localStorage.getItem('lumenix_hint_seen')) {
+    hint.remove();
+    return;
+  }
+  hint.textContent = lang === 'es' ? 'English?' : 'Español?';
 }
 
 let beatIndex = 0;
@@ -447,7 +477,7 @@ applyLang(currentLang);
 
 document.getElementById('leForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  alert(currentLang === 'es' ? 'Gracias — te contactamos en menos de 24 horas.' : "Thanks — we'll reach out within 24 hours.");
+  alert(currentLang === 'es' ? 'Gracias, te contactamos en menos de 24 horas.' : "Thanks, we'll reach out within 24 hours.");
 });
 </script>
 

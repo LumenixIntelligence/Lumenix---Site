@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Web + Growth — Lumenix Intelligence</title>
-<meta name="description" content="Tu página web, con un agente de IA que responde, hace seguimiento, y pide reseñas — todo automático.">
+<meta name="description" content="Tu página web, con un agente de IA que responde, hace seguimiento y pide reseñas. Todo automático.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -38,6 +38,20 @@
     cursor: pointer; background: transparent; transition: all 0.2s ease;
   }
   .lang-toggle:hover { border-color: var(--accent); color: var(--text); }
+  .lang-toggle-wrap { position: relative; display: inline-flex; }
+  .lang-hint {
+    position: absolute; top: 130%; right: 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent);
+    white-space: nowrap; background: var(--bg); border: 1px solid var(--accent);
+    border-radius: 4px; padding: 4px 8px; z-index: 10; pointer-events: none;
+    animation: hint-bounce 1.6s ease-in-out infinite;
+  }
+  .lang-hint::before {
+    content: ''; position: absolute; top: -5px; right: 14px; width: 8px; height: 8px;
+    background: var(--bg); border-left: 1px solid var(--accent); border-top: 1px solid var(--accent);
+    transform: rotate(45deg);
+  }
+  @keyframes hint-bounce { 0%, 100% { transform: translateY(0); opacity: 0.85; } 50% { transform: translateY(-3px); opacity: 1; } }
   .nav-cta { background: var(--accent); color: #04060F; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 700; }
   @media (max-width: 700px) { .nav { padding: 18px 20px; } }
 
@@ -162,7 +176,10 @@
   <a href="/" class="nav-logo"><span class="mark">LMX</span> INTELLIGENCE</a>
   <a href="/" class="nav-back" data-i18n="navBack">← Todos los servicios</a>
   <div class="nav-right">
-    <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+    <div class="lang-toggle-wrap">
+      <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+      <span class="lang-hint" id="langHint">Español?</span>
+    </div>
     <a href="#cta" class="nav-cta" data-i18n="navCta">Lo quiero</a>
   </div>
 </nav>
@@ -172,7 +189,7 @@
     <div>
       <div class="eyebrow" data-i18n="eyebrow">// TU PÁGINA WEB, CON UN AGENTE QUE TRABAJA SOLO</div>
       <h1 data-i18n-html="h1">Una página que <span class="accent">responde, conversa, y pide la reseña.</span></h1>
-      <p data-i18n="p1">Tu landing page profesional, conectada a un agente de IA que contesta cada mensaje, resuelve dudas, agenda, y — cuando el trabajo termina — pide la reseña solo.</p>
+      <p data-i18n="p1">Tu landing page profesional, conectada a un agente de IA que contesta cada mensaje, resuelve dudas, agenda y, cuando el trabajo termina, pide la reseña solo.</p>
       <p class="who" data-i18n="who">Todo en un solo sistema: la página, la conversación, y el seguimiento. No son tres cosas separadas.</p>
     </div>
 
@@ -272,7 +289,7 @@ const translations = {
     navBack: "← Todos los servicios", navCta: "Lo quiero",
     eyebrow: "// TU PÁGINA WEB, CON UN AGENTE QUE TRABAJA SOLO",
     h1: 'Una página que <span class="accent">responde, conversa, y pide la reseña.</span>',
-    p1: "Tu landing page profesional, conectada a un agente de IA que contesta cada mensaje, resuelve dudas, agenda, y — cuando el trabajo termina — pide la reseña solo.",
+    p1: "Tu landing page profesional, conectada a un agente de IA que contesta cada mensaje, resuelve dudas, agenda y, cuando el trabajo termina, pide la reseña solo.",
     who: "Todo en un solo sistema: la página, la conversación, y el seguimiento. No son tres cosas separadas.",
     mbHeadline: 'Vende tu carro. <span class="a">Recibe tu oferta hoy.</span>',
     mbSub: "Respuesta en menos de 2 minutos.", mbButton: "ENVIAR",
@@ -298,7 +315,7 @@ const translations = {
     navBack: "← All services", navCta: "I want this",
     eyebrow: "// YOUR WEBSITE, WITH AN AGENT THAT WORKS ON ITS OWN",
     h1: "A page that <span class=\"accent\">replies, talks, and asks for the review.</span>",
-    p1: "Your professional landing page, connected to an AI agent that answers every message, handles questions, books appointments, and — once the job is done — asks for the review on its own.",
+    p1: "Your professional landing page, connected to an AI agent that answers every message, handles questions, books appointments, and asks for the review on its own once the job is done.",
     who: "All one system: the page, the conversation, and the follow-up. Not three separate things.",
     mbHeadline: 'Sell your car. <span class="a">Get your offer today.</span>',
     mbSub: "Reply in under 2 minutes.", mbButton: "SUBMIT",
@@ -322,7 +339,7 @@ const translations = {
   }
 };
 
-let currentLang = 'es';
+let currentLang = localStorage.getItem('lumenix_lang') || 'en';
 
 function applyLang(lang) {
   const t = translations[lang];
@@ -335,13 +352,26 @@ function applyLang(lang) {
     if (t[key]) el.innerHTML = t[key];
   });
   document.getElementById('langBtn').textContent = lang === 'es' ? 'EN' : 'ES';
+  updateLangHint(lang);
   document.documentElement.lang = lang;
   runPhoneDemo();
 }
 
 function toggleLang() {
   currentLang = currentLang === 'es' ? 'en' : 'es';
+  localStorage.setItem('lumenix_lang', currentLang);
+  localStorage.setItem('lumenix_hint_seen', '1');
   applyLang(currentLang);
+}
+
+function updateLangHint(lang) {
+  const hint = document.getElementById('langHint');
+  if (!hint) return;
+  if (localStorage.getItem('lumenix_hint_seen')) {
+    hint.remove();
+    return;
+  }
+  hint.textContent = lang === 'es' ? 'English?' : 'Español?';
 }
 
 let beatIndex = 0;
@@ -437,7 +467,7 @@ applyLang(currentLang);
 
 document.getElementById('leForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  alert(currentLang === 'es' ? 'Gracias — te contactamos en menos de 24 horas.' : "Thanks — we'll reach out within 24 hours.");
+  alert(currentLang === 'es' ? 'Gracias, te contactamos en menos de 24 horas.' : "Thanks, we'll reach out within 24 hours.");
 });
 </script>
 
